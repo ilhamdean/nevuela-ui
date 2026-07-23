@@ -1,11 +1,18 @@
 {
   "name": "nevuela-ui",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "packageManager": "pnpm@10.17.1",
   "description": "Nevuela — an original Vue 3 admin-console design system.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilhamdean/nevuela-ui.git"
+  },
+  "homepage": "https://github.com/ilhamdean/nevuela-ui#readme",
+  "bugs": {
+    "url": "https://github.com/ilhamdean/nevuela-ui/issues"
+  },
   "keywords": [
     "vue",
     "vue3",
@@ -35,6 +42,7 @@
   ],
   "scripts": {
     "dev": "vite",
+    "prepublishOnly": "pnpm run build",
     "build": "rm -rf dist && pnpm run build:lib && pnpm run build:types",
     "build:lib": "vite build --config vite.lib.config.ts",
     "build:types": "vue-tsc -p tsconfig.build.json",
