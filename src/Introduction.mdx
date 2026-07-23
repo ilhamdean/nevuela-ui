@@ -1,0 +1,61 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Introduction" />
+
+<div style={{ maxWidth: '48rem' }}>
+
+# Nevuela UI
+
+**Nevuela** is an original, open-source **Vue 3 + TypeScript** component library and design system for
+building cloud/admin **console** interfaces — data-dense dashboards, resource lists, detail pages, and
+creation flows.
+
+Its visual language — **Aurora/Nebula** — pairs deep indigo-violet neutrals with an emerald-green
+brand accent, clear status colors, comfortable corner radii, and a comfortable data-table rhythm.
+The code, tokens, and components here are **entirely original**. Icons come from the open-source
+[Lucide](https://lucide.dev) set.
+
+## How it was built
+
+Every color, size, and shadow is a semantic design token — never a raw hex/px value in a component —
+defined once in `src/style.css` and documented under **Foundations → Design Tokens**.
+
+## Stack
+
+- **Vue 3** (`<script setup lang="ts">`) + **Vite**, **TypeScript** strict
+- **Tailwind CSS v4** (CSS-first) with semantic CSS variables
+- **Reka UI** primitives (via the shadcn-vue foundation) for accessible behavior
+- **class-variance-authority** + **tailwind-merge** + **clsx** for variants
+- **@lucide/vue** icons · **vue-echarts** (Apache ECharts) for charts
+
+## Using a component
+
+```vue
+<script setup lang="ts">
+import { Button, StatusBadge } from 'nevuela-ui'
+</script>
+
+<template>
+  <Button variant="primary">Create Instance</Button>
+  <StatusBadge status="active" label="Active" />
+</template>
+```
+
+## What's inside
+
+- **Layout & Nav** — AppShell, Sidebar, TopBar, PageHeader, Breadcrumbs, Tabs, Stepper
+- **Data Display** — DataTable, StatusBadge, Avatar, MetricCard, EmptyState, Tooltip, CopyableField,
+  ProgressBar
+- **Forms** — Button, TextInput, Select, Checkbox, RadioCard, Switch, Textarea, SearchInput, FormField
+- **Feedback & Overlays** — Modal, Drawer, Toast, Alert, ConfirmDialog (type-to-confirm), DropdownMenu,
+  Popover
+- **Charts** — UsageChart (line/area usage graphs)
+
+## Accessibility
+
+This is an admin console, so accessibility is a first-class concern: keyboard navigation and focus
+management come from Reka UI, color is never the only signal (status always carries a text label), form
+controls are label-associated, and the Storybook **a11y** addon runs in `error` mode. Start with the
+**Layout & Nav → AppShell → Full Console** story to see the whole system working together.
+
+</div>
