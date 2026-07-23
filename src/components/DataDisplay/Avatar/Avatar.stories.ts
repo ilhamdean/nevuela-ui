@@ -26,6 +26,16 @@ const meta = {
       options: ['circle', 'square'],
       table: { defaultValue: { summary: 'circle' } },
     },
+    status: {
+      control: 'select',
+      options: [undefined, 'online', 'busy', 'away', 'offline'],
+      description:
+        'Presence dot on the bottom-right corner. Status is also conveyed via visually-hidden text, not color alone.',
+    },
+    loading: {
+      control: 'boolean',
+      description: 'Shows a pulsing skeleton circle instead of the image/fallback.',
+    },
   },
   args: {
     name: 'Morgan Tran',
@@ -57,4 +67,40 @@ export const Sizes: Story = {
         <Avatar v-bind="args" size="lg" />
       </div>`,
   }),
+}
+
+/** A presence dot on the corner, one per status. Color is reinforced with visually-hidden text
+ * ("Online", "Busy", …) for non-color-only status. */
+export const StatusDots: Story = {
+  render: (args) => ({
+    components: { Avatar },
+    setup: () => ({ args }),
+    template: `
+      <div class="flex items-center gap-4">
+        <Avatar v-bind="args" status="online" />
+        <Avatar v-bind="args" status="busy" />
+        <Avatar v-bind="args" status="away" />
+        <Avatar v-bind="args" status="offline" />
+      </div>`,
+  }),
+}
+
+/** The status dot scales with avatar size. */
+export const StatusAcrossSizes: Story = {
+  render: (args) => ({
+    components: { Avatar },
+    setup: () => ({ args }),
+    template: `
+      <div class="flex items-center gap-3">
+        <Avatar v-bind="args" status="online" size="xs" />
+        <Avatar v-bind="args" status="online" size="sm" />
+        <Avatar v-bind="args" status="online" size="md" />
+        <Avatar v-bind="args" status="online" size="lg" />
+      </div>`,
+  }),
+}
+
+/** A skeleton circle shown while avatar data (image, name) is still loading. */
+export const Loading: Story = {
+  args: { loading: true },
 }

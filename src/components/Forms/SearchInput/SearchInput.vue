@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, type HTMLAttributes } from 'vue'
-import { Search, X } from '@lucide/vue'
+import { LoaderCircle, Search, X } from '@lucide/vue'
 import { cn } from '@/lib/utils'
 import type { SearchFilter } from '.'
 
@@ -9,6 +9,8 @@ interface Props {
   filters?: SearchFilter[]
   placeholder?: string
   disabled?: boolean
+  /** Shows a spinner in place of the search icon, for async search-as-you-type. */
+  loading?: boolean
   size?: 'sm' | 'md' | 'lg'
   class?: HTMLAttributes['class']
 }
@@ -17,6 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
   filters: () => [],
   placeholder: 'Search by resource name or public IP…',
   disabled: false,
+  loading: false,
   size: 'md',
 })
 
@@ -46,6 +49,7 @@ function clearAll() {
 <template>
   <div
     role="search"
+    :aria-busy="loading || undefined"
     :class="
       cn(
         'flex w-full flex-wrap items-center gap-1.5 rounded-sm border border-border bg-surface px-3 py-1 text-fg transition-[border-color,box-shadow] focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/25',
@@ -55,7 +59,12 @@ function clearAll() {
       )
     "
   >
-    <Search class="size-4 shrink-0 text-fg-muted" aria-hidden="true" />
+    <LoaderCircle
+      v-if="loading"
+      class="size-4 shrink-0 animate-spin text-fg-muted"
+      aria-hidden="true"
+    />
+    <Search v-else class="size-4 shrink-0 text-fg-muted" aria-hidden="true" />
 
     <span
       v-for="f in filters"

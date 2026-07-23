@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="T extends Record<string, unknown>">
-import { computed, type HTMLAttributes } from 'vue'
-import { ArrowDown, ArrowUp, ChevronsUpDown } from '@lucide/vue'
+import { computed, useId, type HTMLAttributes } from 'vue'
+import { ArrowDown, ArrowUp, ChevronLeft, ChevronRight, ChevronsUpDown } from '@lucide/vue'
 import { cn } from '@/lib/utils'
+import { Button } from '../../Forms/Button'
 import { Checkbox } from '../../Forms/Checkbox'
 import { EmptyState } from '../EmptyState'
 import type { DataTableColumn, DataTableSort } from '.'
@@ -23,6 +24,22 @@ const props = withDefaults(
     manualSort?: boolean
     /** Reserve a trailing column for the `#row-actions` slot. */
     hasRowActions?: boolean
+    /**
+     * Rows per page. Omit to disable pagination entirely (default, unchanged
+     * behavior). When set, footer pagination controls render.
+     */
+    pageSize?: number
+    /**
+     * Total row count across all pages. Provide this for **server-side**
+     * pagination, where `rows` is already just the current page's slice —
+     * the table renders controls from `total`/`pageSize`/`page` and emits
+     * `update:page` for the parent to refetch. Omit for **client-side**
+     * pagination, where `rows` holds the full dataset and the table slices
+     * it internally.
+     */
+    total?: number
+    /** Options for the rows-per-page selector. */
+    pageSizeOptions?: number[]
     class?: HTMLAttributes['class']
   }>(),
   {
@@ -32,11 +49,19 @@ const props = withDefaults(
     emptyText: 'No data to display.',
     manualSort: false,
     hasRowActions: false,
+    pageSizeOptions: () => [10, 25, 50, 100],
   },
 )
 
+const emit = defineEmits<{
+  /** Fired when the user picks a different page size from the footer selector. */
+  pageSizeChange: [size: number]
+}>()
+
 const sort = defineModel<DataTableSort | null>('sort', { default: null })
 const selected = defineModel<Key[]>('selected', { default: () => [] })
+/** Current page, 1-indexed. */
+const page = defineModel<number>('page', { default: 1 })
 
 function keyOf(row: T): Key {
   return typeof props.rowKey === 'function' ? props.rowKey(row) : (row[props.rowKey] as Key)
@@ -72,7 +97,52 @@ function ariaSort(col: DataTableColumn<T>): 'ascending' | 'descending' | 'none' 
   return sort.value.direction === 'asc' ? 'ascending' : 'descending'
 }
 
-const allKeys = computed(() => sortedRows.value.map(keyOf))
+// Pagination — enabled purely by presence of `pageSize`. `total` distinguishes
+// server-side (rows already sliced) from client-side (slice `rows` here).
+const paginationEnabled = computed(() => typeof props.pageSize === 'number' && props.pageSize > 0)
+const isServerPaginated = computed(() => props.total != null)
+const totalItems = computed(() =>
+  isServerPaginated.value ? (props.total ?? 0) : props.rows.length,
+)
+const totalPages = computed(() =>
+  paginationEnabled.value ? Math.max(1, Math.ceil(totalItems.value / (props.pageSize ?? 1))) : 1,
+)
+const currentPage = computed(() =>
+  paginationEnabled.value ? Math.min(Math.max(page.value, 1), totalPages.value) : 1,
+)
+const startRow = computed(() =>
+  totalItems.value === 0 ? 0 : (currentPage.value - 1) * (props.pageSize ?? 0) + 1,
+)
+const endRow = computed(() => Math.min(currentPage.value * (props.pageSize ?? 0), totalItems.value))
+const canGoPrev = computed(() => paginationEnabled.value && currentPage.value > 1)
+const canGoNext = computed(() => paginationEnabled.value && currentPage.value < totalPages.value)
+
+const pagedRows = computed(() => {
+  if (!paginationEnabled.value || isServerPaginated.value) return sortedRows.value
+  const start = (currentPage.value - 1) * (props.pageSize ?? 0)
+  return sortedRows.value.slice(start, start + (props.pageSize ?? 0))
+})
+
+function goToPage(target: number) {
+  if (!paginationEnabled.value) return
+  const clamped = Math.min(Math.max(target, 1), totalPages.value)
+  if (clamped !== page.value) page.value = clamped
+}
+function prevPage() {
+  goToPage(currentPage.value - 1)
+}
+function nextPage() {
+  goToPage(currentPage.value + 1)
+}
+function onPageSizeChange(event: Event) {
+  const size = Number((event.target as HTMLSelectElement).value)
+  emit('pageSizeChange', size)
+  if (page.value !== 1) page.value = 1
+}
+
+const pageSizeId = useId()
+
+const allKeys = computed(() => pagedRows.value.map(keyOf))
 const selectAllState = computed<boolean | 'indeterminate'>(() => {
   if (selected.value.length === 0) return false
   const set = new Set(selected.value)
@@ -176,7 +246,7 @@ const totalCols = computed(
         </template>
 
         <!-- Empty -->
-        <tr v-else-if="sortedRows.length === 0">
+        <tr v-else-if="pagedRows.length === 0">
           <td :colspan="totalCols" class="p-0">
             <slot name="empty">
               <EmptyState :title="emptyText" :bordered="false" />
@@ -187,7 +257,7 @@ const totalCols = computed(
         <!-- Rows -->
         <template v-else>
           <tr
-            v-for="row in sortedRows"
+            v-for="row in pagedRows"
             :key="keyOf(row)"
             :data-selected="isSelected(row) || undefined"
             class="border-b border-border transition-colors last:border-0 hover:bg-bg-subtle/60 data-[selected]:bg-brand-subtle/50"
@@ -215,5 +285,53 @@ const totalCols = computed(
         </template>
       </tbody>
     </table>
+
+    <div
+      v-if="paginationEnabled"
+      class="flex flex-wrap items-center justify-between gap-3 border-t border-border px-3 py-2.5 text-sm text-fg-subtle"
+    >
+      <div class="flex items-center gap-2">
+        <label :for="pageSizeId" class="text-xs">Rows per page</label>
+        <select
+          :id="pageSizeId"
+          class="h-8 rounded-sm border border-border bg-surface px-2 text-sm text-fg outline-none transition-[color,border-color,box-shadow] duration-150 focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-brand/25"
+          :value="pageSize"
+          @change="onPageSizeChange"
+        >
+          <option v-for="opt in pageSizeOptions" :key="opt" :value="opt">{{ opt }}</option>
+        </select>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span aria-live="polite">
+          Page {{ currentPage }} of {{ totalPages }}
+          <span class="hidden text-fg-muted sm:inline"
+            >&middot; {{ startRow }}&ndash;{{ endRow }} of {{ totalItems }}</span
+          >
+        </span>
+        <div class="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            icon-only
+            aria-label="Previous page"
+            :disabled="!canGoPrev"
+            @click="prevPage"
+          >
+            <ChevronLeft aria-hidden="true" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            icon-only
+            aria-label="Next page"
+            :disabled="!canGoNext"
+            @click="nextPage"
+          >
+            <ChevronRight aria-hidden="true" />
+          </Button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>

@@ -17,9 +17,14 @@ export const checkboxVariants = cva(
         sm: 'size-4',
         md: 'size-5',
       },
+      invalid: {
+        true: 'border-status-error ring-2 ring-status-error/30 ring-offset-1 ring-offset-background focus-visible:ring-status-error/40',
+        false: '',
+      },
     },
     defaultVariants: {
       size: 'md',
+      invalid: false,
     },
   },
 )

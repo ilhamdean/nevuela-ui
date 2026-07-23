@@ -21,11 +21,18 @@ const meta = {
       table: { defaultValue: { summary: 'md' } },
     },
     disabled: { control: 'boolean' },
+    invalid: {
+      control: 'boolean',
+      description:
+        'Marks the field invalid: status-error ring + `aria-invalid`. Pair with a FormField error.',
+      table: { defaultValue: { summary: 'false' } },
+    },
     label: { control: 'text', description: 'Inline label (or use the default slot).' },
   },
   args: {
     size: 'md',
     disabled: false,
+    invalid: false,
     label: 'Enable automated backups',
     modelValue: false,
   },
@@ -39,6 +46,9 @@ export const Playground: Story = {}
 export const Checked: Story = { args: { modelValue: true } }
 
 export const Disabled: Story = { args: { disabled: true, modelValue: true } }
+
+/** Wired into a FormField error state — status-error ring + `aria-invalid`. */
+export const Invalid: Story = { args: { invalid: true } }
 
 /** Indeterminate → checked → unchecked, driven interactively. */
 export const Indeterminate: Story = {

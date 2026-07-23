@@ -25,6 +25,12 @@ const meta = {
     },
     showValue: { control: 'boolean' },
     label: { control: 'text' },
+    indeterminate: {
+      control: 'boolean',
+      description:
+        '"Processing, duration unknown" state: an animated fill instead of a fixed width. Passes a `null` value through to Reka UI so `aria-valuenow` is correctly omitted.',
+      table: { defaultValue: { summary: 'false' } },
+    },
   },
   args: {
     value: 64,
@@ -33,6 +39,7 @@ const meta = {
     color: 'brand',
     showValue: true,
     label: 'Disk usage',
+    indeterminate: false,
   },
   render: (args) => ({
     components: { ProgressBar },
@@ -45,6 +52,11 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+
+/** Duration unknown — an animated fill with no `aria-valuenow`, not a fake 0%. */
+export const Indeterminate: Story = {
+  args: { indeterminate: true, label: 'Restoring from snapshot…', showValue: false },
+}
 
 /** Color communicates how close a quota is to its limit. */
 export const QuotaThresholds: Story = {

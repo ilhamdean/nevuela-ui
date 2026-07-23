@@ -17,6 +17,12 @@ const meta = {
     unit: { control: 'text' },
     helpText: { control: 'text' },
     delta: { control: 'object', description: '`{ value, direction: "up"|"down", tone? }`.' },
+    loading: {
+      control: 'boolean',
+      description:
+        'Renders a Skeleton placeholder in place of the label/value/delta while the metric loads.',
+      table: { defaultValue: { summary: 'false' } },
+    },
   },
   args: {
     label: 'CPU usage',
@@ -24,6 +30,7 @@ const meta = {
     unit: '%',
     helpText: 'Avg over the last 24 hours',
     delta: { value: 4.2, direction: 'up', tone: 'neutral' },
+    loading: false,
   },
   render: (args) => ({
     components: { MetricCard, Cpu },
@@ -36,6 +43,9 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+
+/** While the metric is being fetched — no need to hand-compose Skeleton yourself. */
+export const Loading: Story = { args: { loading: true } }
 
 /** A row of metrics with differing delta tones, plus a simple SVG sparkline. */
 export const DashboardRow: Story = {

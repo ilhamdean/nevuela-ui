@@ -13,11 +13,25 @@ const meta = {
       table: { defaultValue: { summary: 'md' } },
     },
     disabled: { control: 'boolean' },
+    loading: {
+      control: 'boolean',
+      description:
+        'Shows a spinner over the thumb, sets `aria-busy`, and blocks toggling — for a setting that calls an API and may fail/revert.',
+      table: { defaultValue: { summary: 'false' } },
+    },
+    invalid: {
+      control: 'boolean',
+      description:
+        'Marks the field invalid: status-error ring + `aria-invalid`. Pair with a FormField error.',
+      table: { defaultValue: { summary: 'false' } },
+    },
     label: { control: 'text', description: 'Inline label (or use the default slot).' },
   },
   args: {
     size: 'md',
     disabled: false,
+    loading: false,
+    invalid: false,
     modelValue: true,
     label: 'Enable backups',
   },
@@ -31,6 +45,12 @@ export const Playground: Story = {}
 export const Off: Story = { args: { modelValue: false } }
 
 export const Disabled: Story = { args: { disabled: true } }
+
+/** Toggling a setting that calls an API — spinner replaces the thumb while in flight. */
+export const Loading: Story = { args: { loading: true } }
+
+/** Wired into a FormField error state — status-error ring + `aria-invalid`. */
+export const Invalid: Story = { args: { invalid: true, modelValue: false } }
 
 export const Sizes: Story = {
   render: (args) => ({

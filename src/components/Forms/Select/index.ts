@@ -8,6 +8,15 @@ export interface SelectOption {
   disabled?: boolean
 }
 
+/** A labeled group of options, for rendering `<SelectGroup>`/`<SelectLabel>` sections. */
+export interface SelectOptionGroup {
+  label: string
+  options: SelectOption[]
+}
+
+/** `options` accepts either a flat list or an array of labeled groups. */
+export type SelectOptionsProp = SelectOption[] | SelectOptionGroup[]
+
 export const selectTriggerVariants = cva(
   [
     'inline-flex w-full items-center justify-between gap-2 rounded-sm border bg-surface text-sm text-fg',

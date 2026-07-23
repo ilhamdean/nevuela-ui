@@ -13,6 +13,13 @@ export interface DropdownMenuItem {
   disabled?: boolean
   /** Arbitrary identifier passed back on `select`. */
   value?: string
+  /**
+   * Nested entries. When present, the item renders as a submenu trigger
+   * (with a chevron-right indicator) instead of a selectable item, and no
+   * longer emits `select` — only its descendants do. Submenus may nest to
+   * any depth.
+   */
+  children?: DropdownEntry[]
 }
 
 export interface DropdownMenuSeparator {
@@ -24,4 +31,38 @@ export interface DropdownMenuLabel {
   label: string
 }
 
-export type DropdownEntry = DropdownMenuItem | DropdownMenuSeparator | DropdownMenuLabel
+export interface DropdownCheckboxEntry {
+  type: 'checkbox'
+  label: string
+  disabled?: boolean
+  /** Arbitrary identifier for the consumer's own bookkeeping. */
+  value?: string
+  /** Whether the checkbox is currently checked. */
+  checked: boolean
+  /** Called with the new checked state when the item is toggled. */
+  onCheckedChange?: (checked: boolean) => void
+}
+
+export interface DropdownRadioOption {
+  label: string
+  value: string
+  disabled?: boolean
+}
+
+export interface DropdownRadioEntry {
+  type: 'radio'
+  /** Optional heading rendered above the group of options. */
+  label?: string
+  /** Currently-selected option value. */
+  value: string
+  options: DropdownRadioOption[]
+  /** Called with the newly-selected option value. */
+  onValueChange?: (value: string) => void
+}
+
+export type DropdownEntry =
+  | DropdownMenuItem
+  | DropdownMenuSeparator
+  | DropdownMenuLabel
+  | DropdownCheckboxEntry
+  | DropdownRadioEntry

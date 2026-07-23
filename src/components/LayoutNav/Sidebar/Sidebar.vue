@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, type HTMLAttributes } from 'vue'
-import { ChevronRight } from '@lucide/vue'
+import { HoverCardContent, HoverCardRoot, HoverCardTrigger } from 'reka-ui'
 import { cn } from '@/lib/utils'
+import SidebarNavItem from './SidebarNavItem.vue'
 import type { SidebarItem, SidebarSection } from '.'
 
 interface Props {
@@ -54,70 +55,76 @@ const linkClass = (active: boolean) =>
       </p>
 
       <template v-for="(item, ii) in section.items" :key="ii">
-        <!-- Expandable group -->
-        <div v-if="item.children && !collapsed">
-          <button
-            type="button"
-            :aria-expanded="expanded.has(item.label)"
-            :class="linkClass(hasActiveChild(item))"
-            @click="toggle(item)"
-          >
-            <component
-              :is="item.icon"
-              v-if="item.icon"
-              class="size-4 shrink-0"
-              aria-hidden="true"
-            />
-            <span class="flex-1 text-left">{{ item.label }}</span>
-            <ChevronRight
-              class="size-4 shrink-0 text-fg-muted transition-transform"
-              :class="expanded.has(item.label) && 'rotate-90'"
-              aria-hidden="true"
-            />
-          </button>
+        <!-- Collapsed rail + group: icon triggers a fly-out submenu on hover/focus.
+             HoverCardContent is intentionally not portalled: reka-ui's Popper
+             positions with `position: fixed` regardless, so it still escapes any
+             clipping/scrolling ancestor, while staying in natural DOM order right
+             after the trigger — keeping the submenu links reachable by Tab. -->
+        <HoverCardRoot v-if="collapsed && item.children" :open-delay="150" :close-delay="150">
+          <HoverCardTrigger as-child>
+            <button
+              type="button"
+              :title="item.label"
+              :aria-label="item.label"
+              aria-haspopup="true"
+              :class="linkClass(hasActiveChild(item))"
+            >
+              <component
+                :is="item.icon"
+                v-if="item.icon"
+                class="size-4 shrink-0"
+                aria-hidden="true"
+              />
+            </button>
+          </HoverCardTrigger>
 
-          <ul
-            v-show="expanded.has(item.label)"
-            class="mt-1 ml-4 flex flex-col gap-1 border-l border-border pl-2"
+          <HoverCardContent
+            side="right"
+            align="start"
+            :side-offset="8"
+            class="z-50 w-56 rounded-md border border-border bg-surface p-2 shadow-md outline-none data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95"
           >
-            <li v-for="(child, ci) in item.children" :key="ci">
-              <a
-                :href="child.href ?? '#'"
-                :class="linkClass(isActive(child))"
-                :aria-current="isActive(child) ? 'page' : undefined"
-                @click="emit('select', child)"
-              >
-                <span class="flex-1 text-left">{{ child.label }}</span>
-                <span
-                  v-if="child.badge != null"
-                  class="rounded-full bg-bg-subtle px-1.5 text-2xs font-semibold text-fg-subtle"
-                  >{{ child.badge }}</span
-                >
-              </a>
-            </li>
-          </ul>
-        </div>
+            <p class="px-3 pt-1 pb-2 text-2xs font-semibold tracking-wider text-fg-muted uppercase">
+              {{ item.label }}
+            </p>
+            <ul class="flex flex-col gap-1" :aria-label="`${item.label} submenu`">
+              <li v-for="(child, ci) in item.children" :key="ci">
+                <SidebarNavItem
+                  :item="child"
+                  :expanded="expanded"
+                  :toggle="toggle"
+                  :is-active="isActive"
+                  :has-active-child="hasActiveChild"
+                  @select="emit('select', $event)"
+                />
+              </li>
+            </ul>
+          </HoverCardContent>
+        </HoverCardRoot>
 
-        <!-- Leaf item -->
+        <!-- Collapsed rail: leaf item (unchanged) -->
         <a
-          v-else
+          v-else-if="collapsed"
           :href="item.href ?? '#'"
-          :title="collapsed ? item.label : undefined"
-          :aria-label="collapsed ? item.label : undefined"
+          :title="item.label"
+          :aria-label="item.label"
           :aria-current="isActive(item) ? 'page' : undefined"
           :class="linkClass(isActive(item))"
           @click="emit('select', item)"
         >
           <component :is="item.icon" v-if="item.icon" class="size-4 shrink-0" aria-hidden="true" />
-          <template v-if="!collapsed">
-            <span class="flex-1 text-left">{{ item.label }}</span>
-            <span
-              v-if="item.badge != null"
-              class="rounded-full bg-bg-subtle px-1.5 text-2xs font-semibold text-fg-subtle"
-              >{{ item.badge }}</span
-            >
-          </template>
         </a>
+
+        <!-- Expanded rail: leaf or group, recursing to any depth -->
+        <SidebarNavItem
+          v-else
+          :item="item"
+          :expanded="expanded"
+          :toggle="toggle"
+          :is-active="isActive"
+          :has-active-child="hasActiveChild"
+          @select="emit('select', $event)"
+        />
       </template>
     </div>
   </nav>

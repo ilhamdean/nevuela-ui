@@ -10,6 +10,8 @@ type CheckedState = boolean | 'indeterminate'
 interface Props {
   size?: CheckboxVariants['size']
   disabled?: boolean
+  /** Marks the field invalid: status-error ring + `aria-invalid`. Pair with a FormField error. */
+  invalid?: boolean
   /** Inline label text (or use the default slot). */
   label?: string
   /** Explicit id (auto-generated otherwise) for label association. */
@@ -20,6 +22,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   size: 'md',
   disabled: false,
+  invalid: false,
 })
 
 const model = defineModel<CheckedState>({ default: false })
@@ -37,7 +40,8 @@ const iconSize = computed(() => (props.size === 'sm' ? 'size-3' : 'size-3.5'))
       :id="controlId"
       v-model="model"
       :disabled="disabled"
-      :class="cn(checkboxVariants({ size }), props.class)"
+      :aria-invalid="invalid || undefined"
+      :class="cn(checkboxVariants({ size, invalid }), props.class)"
     >
       <CheckboxIndicator class="flex items-center justify-center text-current">
         <Minus v-if="model === 'indeterminate'" :class="iconSize" aria-hidden="true" />

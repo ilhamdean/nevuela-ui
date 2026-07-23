@@ -30,6 +30,7 @@ export * from './components/LayoutNav/Stepper'
 /* Data display */
 export * from './components/DataDisplay/StatusBadge'
 export * from './components/DataDisplay/Avatar'
+export * from './components/DataDisplay/AvatarGroup'
 export * from './components/DataDisplay/ProgressBar'
 export * from './components/DataDisplay/EmptyState'
 export * from './components/DataDisplay/Tooltip'

@@ -10,7 +10,7 @@ import {
 } from '.'
 
 interface Props {
-  /** Current value (0…max). */
+  /** Current value (0…max). Ignored while `indeterminate` is true. */
   value?: number
   max?: number
   size?: ProgressVariants['size']
@@ -19,6 +19,13 @@ interface Props {
   showValue?: boolean
   /** Optional caption shown at the start of the label row. */
   label?: string
+  /**
+   * "Processing, duration unknown" state: renders an animated fill instead of
+   * a fixed width. Passes a `null` model value through to Reka UI's
+   * `ProgressRoot`, which maps that to the indeterminate ARIA state
+   * (`aria-valuenow` omitted) rather than reporting a fake 0%.
+   */
+  indeterminate?: boolean
   class?: HTMLAttributes['class']
 }
 
@@ -28,6 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'md',
   color: 'brand',
   showValue: false,
+  indeterminate: false,
 })
 
 const pct = computed(() => {
@@ -43,15 +51,25 @@ const pct = computed(() => {
       class="mb-1.5 flex items-center justify-between text-xs text-fg-subtle"
     >
       <span>{{ label }}</span>
-      <span v-if="showValue" class="font-medium text-fg tabular-nums">{{ pct }}%</span>
+      <span v-if="showValue && !indeterminate" class="font-medium text-fg tabular-nums"
+        >{{ pct }}%</span
+      >
     </div>
 
-    <ProgressRoot :model-value="value" :max="max" :class="progressTrackVariants({ size })">
+    <ProgressRoot
+      :model-value="indeterminate ? undefined : value"
+      :max="max"
+      :class="progressTrackVariants({ size })"
+    >
       <ProgressIndicator
         :class="
-          cn('h-full rounded-full transition-[width] duration-300', progressIndicatorColors[color])
+          cn(
+            'h-full rounded-full',
+            progressIndicatorColors[color],
+            indeterminate ? 'w-full animate-pulse' : 'transition-[width] duration-300',
+          )
         "
-        :style="{ width: `${pct}%` }"
+        :style="indeterminate ? undefined : { width: `${pct}%` }"
       />
     </ProgressRoot>
   </div>

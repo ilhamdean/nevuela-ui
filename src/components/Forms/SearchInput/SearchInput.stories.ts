@@ -20,11 +20,17 @@ const meta = {
       table: { defaultValue: { summary: 'md' } },
     },
     disabled: { control: 'boolean' },
+    loading: {
+      control: 'boolean',
+      description: 'Shows a spinner in place of the search icon, for async search-as-you-type.',
+      table: { defaultValue: { summary: 'false' } },
+    },
   },
   args: {
     placeholder: 'Search by resource name or public IP…',
     size: 'md',
     disabled: false,
+    loading: false,
     filters: [],
   },
   render: (args) => ({
@@ -38,6 +44,16 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+
+/** Async search-as-you-type — spinner replaces the search icon while results load. */
+export const Loading: Story = {
+  args: { loading: true },
+  render: (args) => ({
+    components: { SearchInput },
+    setup: () => ({ args }),
+    template: `<div class="w-[560px]"><SearchInput v-bind="args" model-value="web-prod" /></div>`,
+  }),
+}
 
 /** With active filter chips that the parent can remove. */
 export const WithFilters: Story = {
