@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { ref } from 'vue'
 import { CreditCard, Database, Gauge, Globe, HardDrive, Server, Settings } from '@lucide/vue'
 import { Sidebar, type SidebarSection } from '.'
 
@@ -107,6 +108,59 @@ type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
 
+/**
+ * `activeValue` is a controlled prop — wire `@select` back to it, as a real
+ * consumer would (e.g. on route change), rather than relying on Nevuela to
+ * track selection internally. Click "Databases" to expand it, then click a
+ * child: the group stays expanded and the newly-selected child highlights.
+ */
+export const Interactive: Story = {
+  render: (args) => ({
+    components: { Sidebar },
+    setup: () => {
+      const active = ref(args.activeValue)
+      return { args, active }
+    },
+    template: `<div class="h-[560px] w-60 rounded-xl border border-border bg-surface"><Sidebar v-bind="args" :active-value="active" @select="active = $event.value" /></div>`,
+  }),
+}
+
+/** Same as `Interactive`, but with a 3-level tree — expand "Databases" then a
+ * subgroup, then select a leaf: both ancestor levels stay expanded. */
+export const DeepInteractive: Story = {
+  args: { sections: deepSections, activeValue: 'instances' },
+  render: (args) => ({
+    components: { Sidebar },
+    setup: () => {
+      const active = ref(args.activeValue)
+      return { args, active }
+    },
+    template: `<div class="h-[560px] w-60 rounded-xl border border-border bg-surface"><Sidebar v-bind="args" :active-value="active" @select="active = $event.value" /></div>`,
+  }),
+}
+
+/**
+ * Simulates an external route change — `activeValue` set programmatically
+ * from outside the sidebar (e.g. a router navigation), not by clicking a
+ * currently-visible sidebar link — jumping straight to a 3rd-level item.
+ * Click "Navigate to Redis": every ancestor group ("Databases", "Key-value")
+ * auto-expands to reveal it, even though neither was ever manually opened.
+ */
+export const ExternalNavigation: Story = {
+  args: { sections: deepSections, activeValue: 'instances' },
+  render: (args) => ({
+    components: { Sidebar },
+    setup: () => {
+      const active = ref(args.activeValue)
+      return { args, active }
+    },
+    template: `<div class="flex h-[560px] w-60 flex-col gap-2">
+      <button type="button" class="rounded-sm border border-border px-2 py-1 text-sm" @click="active = 'redis'">Navigate to Redis</button>
+      <div class="flex-1 rounded-xl border border-border bg-surface"><Sidebar v-bind="args" :active-value="active" @select="active = $event.value" /></div>
+    </div>`,
+  }),
+}
+
 export const Collapsed: Story = {
   args: { collapsed: true },
   render: (args) => ({
@@ -139,5 +193,19 @@ export const CollapsedWithFlyout: Story = {
     components: { Sidebar },
     setup: () => ({ args }),
     template: `<div class="flex h-[560px] w-16 items-start rounded-xl border border-border bg-surface"><Sidebar v-bind="args" /></div>`,
+  }),
+}
+
+/** `Interactive`, but for the collapsed rail's hover fly-out: hover "Databases",
+ * expand "Relational", then click a leaf — the fly-out stays open. */
+export const CollapsedInteractive: Story = {
+  args: { sections: deepSections, collapsed: true, activeValue: 'instances' },
+  render: (args) => ({
+    components: { Sidebar },
+    setup: () => {
+      const active = ref(args.activeValue)
+      return { args, active }
+    },
+    template: `<div class="flex h-[560px] w-16 items-start rounded-xl border border-border bg-surface"><Sidebar v-bind="args" :active-value="active" @select="active = $event.value" /></div>`,
   }),
 }

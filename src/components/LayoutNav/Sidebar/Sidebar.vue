@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, type HTMLAttributes } from 'vue'
+import { ref, watch, type HTMLAttributes } from 'vue'
 import { HoverCardContent, HoverCardRoot, HoverCardTrigger } from 'reka-ui'
 import { cn } from '@/lib/utils'
 import SidebarNavItem from './SidebarNavItem.vue'
@@ -24,13 +24,27 @@ const isActive = (item: SidebarItem) => item.value != null && item.value === pro
 const hasActiveChild = (item: SidebarItem): boolean =>
   item.children?.some((c) => isActive(c) || hasActiveChild(c)) ?? false
 
-// Seed expanded groups so the active item is visible on first render.
+// Auto-expand every ancestor group of the active item — at any depth, not just
+// the top level — so the active item is always visible. Re-runs whenever
+// `activeValue`/`sections` change (not just on mount), since both are meant to
+// be driven by the consumer (e.g. on route change). Additive only: it never
+// collapses a group, so a group the user expanded/collapsed manually stays
+// that way even if it no longer (or doesn't yet) contain the active item.
 const expanded = ref(new Set<string>())
-for (const section of props.sections) {
-  for (const item of section.items) {
-    if (item.children && hasActiveChild(item)) expanded.value.add(item.label)
+function expandActiveAncestors(items: SidebarItem[]) {
+  for (const item of items) {
+    if (!item.children) continue
+    if (hasActiveChild(item)) expanded.value.add(item.label)
+    expandActiveAncestors(item.children)
   }
 }
+watch(
+  [() => props.activeValue, () => props.sections],
+  () => {
+    for (const section of props.sections) expandActiveAncestors(section.items)
+  },
+  { immediate: true },
+)
 const toggle = (item: SidebarItem) => {
   if (expanded.value.has(item.label)) expanded.value.delete(item.label)
   else expanded.value.add(item.label)
@@ -39,7 +53,7 @@ const toggle = (item: SidebarItem) => {
 const linkClass = (active: boolean) =>
   cn(
     'group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand/25',
-    active ? 'bg-brand-subtle text-brand' : 'text-fg-subtle hover:bg-bg-subtle hover:text-fg',
+    active ? 'bg-brand-subtle text-brand-fg' : 'text-fg-subtle hover:bg-bg-subtle hover:text-fg',
     props.collapsed && 'justify-center px-0',
   )
 </script>
