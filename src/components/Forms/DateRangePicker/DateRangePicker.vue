@@ -1,22 +1,22 @@
 <script setup lang="ts">
 import { computed, type HTMLAttributes } from 'vue'
 import {
-  CalendarCell,
-  CalendarCellTrigger,
-  CalendarGrid,
-  CalendarGridBody,
-  CalendarGridHead,
-  CalendarGridRow,
-  CalendarHeadCell,
-  CalendarHeader,
-  CalendarHeading,
-  CalendarNext,
-  CalendarPrev,
   DateRangePickerAnchor,
   DateRangePickerCalendar,
+  DateRangePickerCell,
+  DateRangePickerCellTrigger,
   DateRangePickerContent,
   DateRangePickerField,
+  DateRangePickerGrid,
+  DateRangePickerGridBody,
+  DateRangePickerGridHead,
+  DateRangePickerGridRow,
+  DateRangePickerHeadCell,
+  DateRangePickerHeader,
+  DateRangePickerHeading,
   DateRangePickerInput,
+  DateRangePickerNext,
+  DateRangePickerPrev,
   DateRangePickerRoot,
   DateRangePickerTrigger,
 } from 'reka-ui'
@@ -90,6 +90,7 @@ const cellTriggerClass = cn(
   'data-[outside-view]:text-fg-muted data-[outside-view]:opacity-50',
   'data-[disabled]:pointer-events-none data-[disabled]:opacity-40',
   'data-[highlighted]:rounded-none data-[highlighted]:bg-brand-subtle',
+  'data-[selected]:rounded-none data-[selected]:bg-brand-subtle',
   'data-[selection-start]:rounded-l-sm data-[selection-start]:bg-brand data-[selection-start]:text-on-accent data-[selection-start]:hover:bg-brand-hover',
   'data-[selection-end]:rounded-r-sm data-[selection-end]:bg-brand data-[selection-end]:text-on-accent data-[selection-end]:hover:bg-brand-hover',
 )
@@ -145,52 +146,60 @@ const segmentClass =
       <DateRangePickerCalendar v-slot="{ grid, weekDays }">
         <div class="flex gap-6">
           <div v-for="(month, mi) in grid" :key="mi">
-            <CalendarHeader class="flex items-center justify-between px-1 py-2">
-              <CalendarPrev v-if="mi === 0" :class="navButtonClass" aria-label="Previous month">
+            <DateRangePickerHeader class="flex items-center justify-between px-1 py-2">
+              <DateRangePickerPrev
+                v-if="mi === 0"
+                :class="navButtonClass"
+                aria-label="Previous month"
+              >
                 <ChevronLeft class="size-4" aria-hidden="true" />
-              </CalendarPrev>
+              </DateRangePickerPrev>
               <span v-else class="size-7" />
 
-              <CalendarHeading class="text-sm font-semibold text-fg" />
+              <DateRangePickerHeading class="text-sm font-semibold text-fg" />
 
-              <CalendarNext
+              <DateRangePickerNext
                 v-if="mi === grid.length - 1"
                 :class="navButtonClass"
                 aria-label="Next month"
               >
                 <ChevronRight class="size-4" aria-hidden="true" />
-              </CalendarNext>
+              </DateRangePickerNext>
               <span v-else class="size-7" />
-            </CalendarHeader>
+            </DateRangePickerHeader>
 
-            <CalendarGrid class="w-full border-collapse">
-              <CalendarGridHead>
-                <CalendarGridRow class="flex">
-                  <CalendarHeadCell
+            <DateRangePickerGrid class="w-full border-collapse">
+              <DateRangePickerGridHead>
+                <DateRangePickerGridRow class="flex">
+                  <DateRangePickerHeadCell
                     v-for="day in weekDays"
                     :key="day"
                     class="w-9 text-2xs font-medium text-fg-muted"
-                    >{{ day }}</CalendarHeadCell
+                    >{{ day }}</DateRangePickerHeadCell
                   >
-                </CalendarGridRow>
-              </CalendarGridHead>
-              <CalendarGridBody>
-                <CalendarGridRow v-for="(week, wi) in month.rows" :key="wi" class="flex w-full">
-                  <CalendarCell
+                </DateRangePickerGridRow>
+              </DateRangePickerGridHead>
+              <DateRangePickerGridBody>
+                <DateRangePickerGridRow
+                  v-for="(week, wi) in month.rows"
+                  :key="wi"
+                  class="flex w-full"
+                >
+                  <DateRangePickerCell
                     v-for="value in week"
                     :key="value.toString()"
                     :date="value"
                     class="relative size-9 p-0 text-center text-sm"
                   >
-                    <CalendarCellTrigger
+                    <DateRangePickerCellTrigger
                       :day="value"
                       :month="month.value"
                       :class="cellTriggerClass"
                     />
-                  </CalendarCell>
-                </CalendarGridRow>
-              </CalendarGridBody>
-            </CalendarGrid>
+                  </DateRangePickerCell>
+                </DateRangePickerGridRow>
+              </DateRangePickerGridBody>
+            </DateRangePickerGrid>
           </div>
         </div>
       </DateRangePickerCalendar>
