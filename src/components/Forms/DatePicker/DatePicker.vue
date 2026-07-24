@@ -95,13 +95,13 @@ watch(
 const segmentClass = (part: string) =>
   part === 'literal'
     ? 'px-0.5 text-fg-muted'
-    : 'rounded-xs px-0.5 tabular-nums outline-none focus:bg-brand-subtle focus:text-brand'
+    : 'rounded-xs px-0.5 tabular-nums outline-none focus:bg-brand-subtle focus:text-brand-fg'
 
 const navButtonClass =
   'inline-flex size-7 items-center justify-center rounded-sm text-fg-muted outline-none transition-colors hover:bg-bg-subtle hover:text-fg focus-visible:ring-2 focus-visible:ring-brand/25 disabled:pointer-events-none disabled:opacity-40'
 
 const cellTriggerClass =
-  'inline-flex size-9 items-center justify-center rounded-sm text-sm outline-none transition-colors hover:bg-bg-subtle focus-visible:ring-2 focus-visible:ring-brand/25 data-[today]:border data-[today]:border-brand data-[selected]:bg-brand data-[selected]:font-semibold data-[selected]:text-on-accent data-[selected]:hover:bg-brand-hover data-[outside-view]:text-fg-muted data-[outside-view]:opacity-50 data-[disabled]:pointer-events-none data-[disabled]:opacity-40 data-[unavailable]:pointer-events-none data-[unavailable]:text-status-error data-[unavailable]:line-through'
+  'inline-flex size-9 items-center justify-center rounded-sm text-sm outline-none transition-colors hover:bg-bg-subtle focus-visible:ring-2 focus-visible:ring-brand/25 data-[today]:border data-[today]:border-brand data-[selected]:bg-brand data-[selected]:font-semibold data-[selected]:text-on-accent data-[selected]:hover:bg-brand-hover data-[outside-view]:text-fg-muted data-[outside-view]:opacity-50 data-[disabled]:pointer-events-none data-[disabled]:opacity-40 data-[unavailable]:pointer-events-none data-[unavailable]:text-status-error-fg data-[unavailable]:line-through'
 </script>
 
 <template>

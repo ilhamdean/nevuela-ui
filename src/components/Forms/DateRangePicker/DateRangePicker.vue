@@ -96,7 +96,7 @@ const cellTriggerClass = cn(
 )
 
 const segmentClass =
-  'rounded-sm px-0.5 tabular-nums outline-none focus:bg-brand-subtle focus:text-brand data-[placeholder]:text-fg-muted'
+  'rounded-sm px-0.5 tabular-nums outline-none focus:bg-brand-subtle focus:text-brand-fg data-[placeholder]:text-fg-muted'
 </script>
 
 <template>

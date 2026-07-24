@@ -43,13 +43,13 @@ const emit = defineEmits<{
       role="status"
       class="flex items-center gap-3 rounded-xl bg-brand-subtle p-3"
     >
-      <p class="shrink-0 text-sm font-medium text-brand">{{ selectedCount }} selected</p>
+      <p class="shrink-0 text-sm font-medium text-brand-fg">{{ selectedCount }} selected</p>
       <div class="flex flex-1 flex-wrap items-center gap-2">
         <slot name="bulk-actions" />
       </div>
       <button
         type="button"
-        class="inline-flex shrink-0 items-center gap-1 rounded-sm px-2 py-1 text-sm font-medium text-brand transition-colors hover:bg-brand/10 focus-visible:ring-2 focus-visible:ring-brand/25 focus-visible:outline-none"
+        class="inline-flex shrink-0 items-center gap-1 rounded-sm px-2 py-1 text-sm font-medium text-brand-fg transition-colors hover:bg-brand/10 focus-visible:ring-2 focus-visible:ring-brand/25 focus-visible:outline-none"
         @click="emit('clear-selection')"
       >
         <X class="size-4" aria-hidden="true" />

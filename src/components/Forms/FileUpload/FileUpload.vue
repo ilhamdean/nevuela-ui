@@ -191,7 +191,7 @@ function removeFile(id: string) {
             size="sm"
           />
 
-          <p v-if="entry.error" class="text-xs text-status-error">{{ entry.error }}</p>
+          <p v-if="entry.error" class="text-xs text-status-error-fg">{{ entry.error }}</p>
         </div>
 
         <Button

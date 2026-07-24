@@ -37,10 +37,10 @@ const iconComponent = computed(() =>
   props.icon === null ? null : (props.icon ?? defaultIcons[props.tone]),
 )
 const iconColor: Record<AlertTone, string> = {
-  info: 'text-status-info',
-  success: 'text-status-active',
-  warning: 'text-status-warning',
-  error: 'text-status-error',
+  info: 'text-status-info-fg',
+  success: 'text-status-active-fg',
+  warning: 'text-status-warning-fg',
+  error: 'text-status-error-fg',
 }
 // Error/warning are assertive; info/success are polite.
 const role = computed(() =>

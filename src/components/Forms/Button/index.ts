@@ -23,7 +23,7 @@ export const buttonVariants = cva(
       variant: {
         primary: 'bg-brand text-on-accent hover:bg-brand-hover active:bg-brand-active',
         secondary:
-          'bg-surface text-brand border-brand hover:bg-brand-subtle active:bg-brand-subtle',
+          'bg-surface text-brand-fg border-brand hover:bg-brand-subtle active:bg-brand-subtle',
         destructive: 'bg-status-error text-on-accent hover:opacity-90 active:opacity-80',
         ghost: 'bg-transparent text-fg hover:bg-bg-subtle active:bg-bg-subtle',
       },

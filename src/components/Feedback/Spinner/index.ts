@@ -15,7 +15,7 @@ export const spinnerVariants = cva('shrink-0 animate-spin', {
 })
 
 export const spinnerColors = {
-  brand: 'text-brand',
+  brand: 'text-brand-fg',
   muted: 'text-fg-muted',
   current: 'text-current',
 } as const

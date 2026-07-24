@@ -8,6 +8,7 @@ const config: StorybookConfig = {
     '@storybook/addon-a11y',
     '@storybook/addon-docs',
     '@storybook/addon-onboarding',
+    '@storybook/addon-themes',
   ],
   framework: '@storybook/vue3-vite',
 }

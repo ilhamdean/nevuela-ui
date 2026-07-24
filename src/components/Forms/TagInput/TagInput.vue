@@ -43,7 +43,7 @@ const hasReachedMax = computed(
 const isInputDisabled = computed(() => props.disabled || hasReachedMax.value)
 
 const chipClass =
-  'inline-flex items-center gap-1 rounded-sm bg-brand-subtle py-0.5 pr-1 pl-1.5 text-xs font-medium text-brand'
+  'inline-flex items-center gap-1 rounded-sm bg-brand-subtle py-0.5 pr-1 pl-1.5 text-xs font-medium text-brand-fg'
 
 const inputRef = ref<InstanceType<typeof TagsInputInput>>()
 defineExpose({

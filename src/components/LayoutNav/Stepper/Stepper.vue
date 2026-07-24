@@ -26,15 +26,15 @@ const stateOf = (i: number): StepState => {
 
 const circleClass: Record<StepState, string> = {
   complete: 'border-brand bg-brand text-on-accent',
-  current: 'border-brand bg-brand-subtle text-brand',
+  current: 'border-brand bg-brand-subtle text-brand-fg',
   upcoming: 'border-border bg-surface text-fg-muted',
-  error: 'border-status-error bg-status-error-subtle text-status-error',
+  error: 'border-status-error bg-status-error-subtle text-status-error-fg',
 }
 const labelClass: Record<StepState, string> = {
   complete: 'text-fg',
-  current: 'text-brand',
+  current: 'text-brand-fg',
   upcoming: 'text-fg-muted',
-  error: 'text-status-error',
+  error: 'text-status-error-fg',
 }
 const connectorClass = (i: number) => (i < props.current ? 'bg-brand' : 'bg-border')
 </script>

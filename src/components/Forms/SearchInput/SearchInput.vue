@@ -69,7 +69,7 @@ function clearAll() {
     <span
       v-for="f in filters"
       :key="f.id"
-      class="inline-flex items-center gap-1 rounded-sm bg-brand-subtle py-0.5 pr-1 pl-2 text-xs font-medium text-brand"
+      class="inline-flex items-center gap-1 rounded-sm bg-brand-subtle py-0.5 pr-1 pl-2 text-xs font-medium text-brand-fg"
     >
       {{ f.label }}
       <button

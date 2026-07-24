@@ -1,5 +1,6 @@
 import { definePreview } from '@storybook/vue3-vite'
 import addonDocs from '@storybook/addon-docs'
+import addonThemes, { withThemeByClassName } from '@storybook/addon-themes'
 
 // Self-hosted Inter (the extracted primary typeface) — loaded here so the docs
 // environment matches production without a runtime CDN dependency.
@@ -10,11 +11,20 @@ import '@fontsource-variable/inter'
 import '../src/style.css'
 
 export default definePreview({
-  addons: [addonDocs()],
+  addons: [addonDocs(), addonThemes()],
 
   // Apply the `autodocs` tag to every story so each component gets a generated
   // docs page from its argTypes.
   tags: ['autodocs'],
+
+  // Adds the light/dark toolbar toggle. Applies `.dark` to <html>, matching the
+  // `@custom-variant dark (&:is(.dark *))` selector in src/style.css.
+  decorators: [
+    withThemeByClassName({
+      themes: { light: '', dark: 'dark' },
+      defaultTheme: 'light',
+    }),
+  ],
 
   parameters: {
     layout: 'centered',

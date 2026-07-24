@@ -85,7 +85,11 @@ spacing, type scale, shadows), exposed as Tailwind utilities (`bg-brand`, `text-
 `rounded-sm`, `shadow-md`, …). Components use these tokens exclusively — never raw hex/px values.
 `design-reference/tokens.md` is the source of truth for *why* each token has the value it does — the
 rationale behind the Aurora/Nebula palette, type scale, radii, and spacing. Dark theme (`.dark`) is
-scaffolded in `style.css` but intentionally untuned — this is a light-only v1.
+a real, WCAG AA-verified palette, toggled via a `.dark` ancestor class (Storybook: the toolbar
+light/dark toggle). `--brand`/`--status-error` have a second, lighter `-fg` variant
+(`--brand-fg`/`--status-error-fg`) for bare text/icons, since one shade can't stay AA-compliant
+both as a solid fill *and* as text directly on the dark background — see `tokens.md` § Dark theme
+before adding new brand/status-colored text.
 
 ### Path alias
 

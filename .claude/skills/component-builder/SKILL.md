@@ -76,14 +76,23 @@ Also export any option/item interfaces the component's props use
 
 Defined in `src/style.css`. Use these — do not invent colors.
 
-- **Brand:** `bg-brand` `bg-brand-hover` `bg-brand-active` `bg-brand-subtle`
-  `text-brand` `text-link`, focus ring `ring-brand/25`.
+- **Brand:** `bg-brand` `bg-brand-hover` `bg-brand-active` `bg-brand-subtle` for
+  fills/borders/dots; `text-brand-fg` (not `text-brand`) for any actual text or icon
+  — including text on `bg-brand-subtle` — `text-link`, focus ring `ring-brand/25`.
+  Dark mode gives `-fg` a different, lighter shade so bare text stays AA-compliant on
+  a dark background; `text-brand`/`text-status-*` are reserved for solid fills paired
+  with `text-on-accent` (e.g. `bg-brand text-on-accent`) and are not readable enough
+  as standalone text in dark mode. See `design-reference/tokens.md` § Dark theme.
 - **Neutrals:** `bg-surface` (cards) · `bg-bg` (page) · `bg-bg-subtle` (wells/zebra)
   · `border-border` / `border-border-strong` · text `text-fg` `text-fg-subtle`
   `text-fg-muted` · on-solid text `text-on-accent`.
-- **Status** (each has solid + `-subtle`): `status-active` (green), `status-warning`
-  (amber), `status-error` (red), `status-off` (neutral), `status-info` (indigo) —
-  e.g. `bg-status-active`, `text-status-error`, `bg-status-warning-subtle`.
+- **Status** (each has solid + `-subtle` + `-fg`): `status-active` (green),
+  `status-warning` (amber), `status-error` (red), `status-off` (neutral),
+  `status-info` (indigo) — `bg-status-active` / `bg-status-warning-subtle` for
+  fills/washes/dots, `text-status-error-fg` (not `text-status-error`) for text/icons.
+  Only `status-error` actually differs from its `-fg` alias in dark mode (it's also
+  used as a button fill, e.g. `Button`'s `destructive` variant); the rest are aliases
+  but use the `-fg` form anyway for consistency.
 - **Charts:** `--chart-1…6` (read in JS via `getComputedStyle`, see UsageChart).
 - **Radius:** `rounded-sm` (6px, default for buttons/inputs/badges),
   `rounded-md` (8px), `rounded-lg` (10px), `rounded-xl` (12px, cards),

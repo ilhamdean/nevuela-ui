@@ -32,8 +32,8 @@ const tone = computed(
 const toneClass = computed(
   () =>
     ({
-      positive: 'text-status-active',
-      negative: 'text-status-error',
+      positive: 'text-status-active-fg',
+      negative: 'text-status-error-fg',
       neutral: 'text-fg-subtle',
     })[tone.value],
 )

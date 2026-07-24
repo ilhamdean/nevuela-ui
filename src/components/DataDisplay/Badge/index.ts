@@ -9,11 +9,11 @@ export const badgeVariants = cva(
       /** Decorative color only — purely categorical, carries no lifecycle/state meaning. */
       color: {
         neutral: 'border border-border bg-bg-subtle text-fg-subtle',
-        brand: 'border border-transparent bg-brand-subtle text-brand',
-        green: 'border border-transparent bg-status-active-subtle text-status-active',
-        amber: 'border border-transparent bg-status-warning-subtle text-status-warning',
-        red: 'border border-transparent bg-status-error-subtle text-status-error',
-        blue: 'border border-transparent bg-status-info-subtle text-status-info',
+        brand: 'border border-transparent bg-brand-subtle text-brand-fg',
+        green: 'border border-transparent bg-status-active-subtle text-status-active-fg',
+        amber: 'border border-transparent bg-status-warning-subtle text-status-warning-fg',
+        red: 'border border-transparent bg-status-error-subtle text-status-error-fg',
+        blue: 'border border-transparent bg-status-info-subtle text-status-info-fg',
       },
       size: {
         sm: 'px-1.5 py-0.5 text-2xs',

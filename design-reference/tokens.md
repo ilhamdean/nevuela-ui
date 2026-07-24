@@ -110,9 +110,81 @@ Two-layer shadows tinted with the indigo foreground:
   padding.
 - **Selected RadioCard**: white bg, **2px** brand border, radius 6px.
 
+## Dark theme
+
+Dark mode is a real, WCAG AA-verified theme (not a placeholder inversion), toggled by applying a
+`.dark` class to an ancestor element — `@custom-variant dark (&:is(.dark *))` in `src/style.css`.
+In Storybook, use the light/dark toggle in the toolbar (`@storybook/addon-themes`). Every value
+below was chosen with an OKLCH contrast calculator against WCAG AA (4.5:1 text, 3:1 UI
+components/graphics), not by eye.
+
+### The fill/text split
+
+`--brand` and the status colors are used in two roles that pull in opposite directions on a dark
+background:
+
+- **Fill** — a solid background with `--on-accent` (white) text on top (buttons, checkboxes,
+  selected calendar days). This wants a **darker**, more saturated shade so white text stays
+  readable on it.
+- **Bare text/icon** — the color used directly as `text-*`, with no fill behind it (tab labels,
+  toolbar/breadcrumb links, form error text, metric deltas). This wants a **lighter** shade so it
+  reads against the dark page background.
+
+No single emerald or red shade satisfies both at once — a shade light enough to read as text on
+`--bg`/`--surface` is too light for white text to read on top of it as a fill, and vice versa (the
+best achievable single-token compromise tops out around ~4:1, short of AA). So `--brand` and
+`--status-error` (the only status color also used as a fill, via the `destructive` Button variant)
+each get a second, lighter shade — `--brand-fg` / `--status-error-fg` — for the bare-text role.
+Components use `text-brand-fg` / `text-status-error-fg` for actual text and icons, never
+`text-brand` / `text-status-error` (those stay reserved for `bg-*`/`border-*`/dots). This includes
+text sitting on the `*-subtle` wash (badges, selected menu items) — the `-fg` shade is tuned to
+read on both the page background _and_ the subtle wash.
+
+`active`/`warning`/`info`/`off` are never used as a fill with `--on-accent` text, so they don't
+have this conflict — their `-fg` token is just an alias of the base color (in both themes). Light
+mode never needs this split at all: light mode's fill and bare-text roles both contrast against
+the *same* background family (white), so one shade already works for both — the conflict is
+dark-mode-specific.
+
+`--status-off` intentionally stays under AA in both themes (mirrors `--fg-muted`), matching the
+existing light-theme treatment of "inactive" as a deliberately de-emphasized state — WCAG doesn't
+require contrast minimums for disabled/inactive UI.
+
+### Dark palette
+
+| Token | oklch | hex | Notes |
+| --- | --- | --- | --- |
+| `--surface` | `oklch(0.22 0.026 280)` | `#181927` | cards, menus, inputs |
+| `--bg` | `oklch(0.15 0.028 280)` | `#090a17` | app/page background |
+| `--bg-subtle` | `oklch(0.19 0.028 280)` | `#111220` | zebra rows, wells |
+| `--border-c` | `oklch(0.32 0.02 280)` | `#31323d` | default borders — a soft hairline by design, same ~1.3:1 informal separation the light theme's own border already uses, not a 3:1 AA border |
+| `--border-strong` | `oklch(0.44 0.018 280)` | `#50525d` | hover/emphasis borders |
+| `--fg` | `oklch(0.97 0.005 275)` | `#f4f5f9` | primary text — 18:1 on `--bg` |
+| `--fg-muted` | `oklch(0.72 0.018 270)` | `#a0a4b0` | placeholders, disabled, icons — 7–8:1 |
+| `--brand` (fill) | `oklch(0.5 0.16 155)` | `#007c36` | 5.3:1 white-on-it; 3.2–3.7:1 vs bg/surface (borders) |
+| `--brand-hover` | `oklch(0.46 0.16 155)` | `#00702b` | darkens on hover, same direction as light theme |
+| `--brand-active` | `oklch(0.42 0.16 155)` | `#00641f` | |
+| `--brand-subtle` | `oklch(0.27 0.06 155)` | `#062f19` | wash bg for highlighted/selected rows |
+| `--brand-fg` (text) | `oklch(0.67 0.16 155)` | `#19b168` | 6–7:1 vs bg/surface; 5.3:1 on `--brand-subtle` |
+| `--link` | `oklch(0.68 0.12 170)` | `#32b08d` | 6–7:1 vs bg/surface |
+| `--status-active` | `oklch(0.66 0.15 142)` | `#56a84e` | 6–7:1; alias role (no separate fill shade) |
+| `--status-warning` | `oklch(0.7 0.15 75)` | `#d48e00` | 6–7:1 |
+| `--status-error` (fill) | `oklch(0.52 0.19 25)` | `#be222a` | 6.1:1 white-on-it |
+| `--status-error-fg` (text) | `oklch(0.7 0.17 25)` | `#f66d67` | 6–7:1 vs bg/surface; 5.4:1 on its subtle |
+| `--status-info` | `oklch(0.68 0.15 265)` | `#6a94f4` | 6–7:1 |
+| `--status-off` | `oklch(0.72 0.018 270)` | `#a0a4b0` | = `--fg-muted`; under AA by design |
+| `--chart-1…6` | brightened ~0.06–0.14 L from light | — | light-theme chart values fall as low as ~2.8:1 on a dark surface (non-text objects need 3:1 per WCAG 1.4.11); dark values sit at 5–7:1 |
+
+Every `*-subtle` status background got its own dark value too (not just an opacity trick) —
+`--status-info-subtle` in particular was entirely missing from earlier dark scaffolding and had to
+be added.
+
+Elevation shadows also get dark-specific values: the light theme's indigo-tinted `--shadow-*` is
+nearly the same lightness as a dark surface and reads as almost invisible there, so `.dark`
+overrides them with a higher-opacity near-black shadow instead.
+
 ---
 
 _See `src/style.css` for the implemented `:root` token block, the `@theme` scale mappings, and the
 shadcn/Reka bridge variables (`--primary`, `--border`, `--radius`, …) that re-point the primitive
-layer onto these Nevuela tokens. Dark theme is scaffolded (`.dark`) but intentionally untuned for
-v1 (light-only)._
+layer onto these Nevuela tokens._

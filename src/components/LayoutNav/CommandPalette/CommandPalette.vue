@@ -75,7 +75,7 @@ onMounted(() => window.addEventListener('keydown', handleKeydown))
 onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown))
 
 const itemClass =
-  'relative flex cursor-pointer items-center gap-2.5 rounded-sm px-3 py-2.5 text-sm text-fg outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-brand-subtle data-[highlighted]:text-brand'
+  'relative flex cursor-pointer items-center gap-2.5 rounded-sm px-3 py-2.5 text-sm text-fg outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-brand-subtle data-[highlighted]:text-brand-fg'
 const groupLabelClass = 'px-3 py-1.5 text-2xs font-semibold tracking-wide text-fg-muted uppercase'
 </script>
 

@@ -72,7 +72,7 @@ onBeforeUnmount(() => clearTimeout(timer))
         :aria-label="copied ? 'Copied' : 'Copy to clipboard'"
         @click="copy"
       >
-        <Check v-if="copied" class="size-4 text-status-active" aria-hidden="true" />
+        <Check v-if="copied" class="size-4 text-status-active-fg" aria-hidden="true" />
         <Copy v-else class="size-4" aria-hidden="true" />
       </button>
     </div>

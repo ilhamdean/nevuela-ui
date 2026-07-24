@@ -22,7 +22,7 @@ const defaultValue = computed(() => props.tabs[0]?.value)
         :key="tab.value"
         :value="tab.value"
         :disabled="tab.disabled"
-        class="relative -mb-px inline-flex items-center gap-1.5 border-b-2 border-transparent px-3 py-2.5 text-sm font-medium text-fg-subtle outline-none transition-colors hover:text-fg focus-visible:text-fg disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-brand data-[state=active]:text-brand"
+        class="relative -mb-px inline-flex items-center gap-1.5 border-b-2 border-transparent px-3 py-2.5 text-sm font-medium text-fg-subtle outline-none transition-colors hover:text-fg focus-visible:text-fg disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-brand data-[state=active]:text-brand-fg"
       >
         <component :is="tab.icon" v-if="tab.icon" class="size-4" aria-hidden="true" />
         {{ tab.label }}

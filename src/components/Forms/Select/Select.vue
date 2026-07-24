@@ -127,10 +127,10 @@ function displayValue(value: unknown): string {
 }
 
 const itemClass =
-  'relative flex cursor-pointer items-center rounded-sm py-1.5 pr-8 pl-2 text-sm outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-brand-subtle data-[highlighted]:text-brand data-[state=checked]:font-medium'
+  'relative flex cursor-pointer items-center rounded-sm py-1.5 pr-8 pl-2 text-sm outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-brand-subtle data-[highlighted]:text-brand-fg data-[state=checked]:font-medium'
 const groupLabelClass = 'px-2 py-1.5 text-2xs font-semibold tracking-wide text-fg-muted uppercase'
 const chipClass =
-  'inline-flex items-center gap-1 rounded-sm bg-brand-subtle py-0.5 pr-1 pl-1.5 text-xs font-medium text-brand'
+  'inline-flex items-center gap-1 rounded-sm bg-brand-subtle py-0.5 pr-1 pl-1.5 text-xs font-medium text-brand-fg'
 </script>
 
 <template>
@@ -232,7 +232,7 @@ const chipClass =
                   :class="itemClass"
                 >
                   <ComboboxItemIndicator
-                    class="absolute right-2 inline-flex items-center text-brand"
+                    class="absolute right-2 inline-flex items-center text-brand-fg"
                   >
                     <Check class="size-4" />
                   </ComboboxItemIndicator>
@@ -249,7 +249,7 @@ const chipClass =
                   :class="itemClass"
                 >
                   <ComboboxItemIndicator
-                    class="absolute right-2 inline-flex items-center text-brand"
+                    class="absolute right-2 inline-flex items-center text-brand-fg"
                   >
                     <Check class="size-4" />
                   </ComboboxItemIndicator>
@@ -335,7 +335,9 @@ const chipClass =
                   :class="itemClass"
                 >
                   <SelectItemText>{{ opt.label }}</SelectItemText>
-                  <SelectItemIndicator class="absolute right-2 inline-flex items-center text-brand">
+                  <SelectItemIndicator
+                    class="absolute right-2 inline-flex items-center text-brand-fg"
+                  >
                     <Check class="size-4" />
                   </SelectItemIndicator>
                 </SelectItem>
@@ -349,7 +351,9 @@ const chipClass =
                   :class="itemClass"
                 >
                   <SelectItemText>{{ opt.label }}</SelectItemText>
-                  <SelectItemIndicator class="absolute right-2 inline-flex items-center text-brand">
+                  <SelectItemIndicator
+                    class="absolute right-2 inline-flex items-center text-brand-fg"
+                  >
                     <Check class="size-4" />
                   </SelectItemIndicator>
                 </SelectItem>

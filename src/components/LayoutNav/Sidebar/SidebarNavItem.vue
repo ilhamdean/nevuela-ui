@@ -22,7 +22,7 @@ const emit = defineEmits<{ select: [item: SidebarItem] }>()
 const linkClass = (active: boolean) =>
   cn(
     'group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand/25',
-    active ? 'bg-brand-subtle text-brand' : 'text-fg-subtle hover:bg-bg-subtle hover:text-fg',
+    active ? 'bg-brand-subtle text-brand-fg' : 'text-fg-subtle hover:bg-bg-subtle hover:text-fg',
   )
 </script>
 

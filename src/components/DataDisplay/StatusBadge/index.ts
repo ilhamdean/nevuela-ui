@@ -10,16 +10,20 @@ export const statusStyles: Record<StatusKind, { dot: string; subtleBg: string; t
   active: {
     dot: 'bg-status-active',
     subtleBg: 'bg-status-active-subtle',
-    text: 'text-status-active',
+    text: 'text-status-active-fg',
   },
   warning: {
     dot: 'bg-status-warning',
     subtleBg: 'bg-status-warning-subtle',
-    text: 'text-status-warning',
+    text: 'text-status-warning-fg',
   },
-  error: { dot: 'bg-status-error', subtleBg: 'bg-status-error-subtle', text: 'text-status-error' },
-  off: { dot: 'bg-status-off', subtleBg: 'bg-status-off-subtle', text: 'text-status-off' },
-  info: { dot: 'bg-status-info', subtleBg: 'bg-status-info-subtle', text: 'text-status-info' },
+  error: {
+    dot: 'bg-status-error',
+    subtleBg: 'bg-status-error-subtle',
+    text: 'text-status-error-fg',
+  },
+  off: { dot: 'bg-status-off', subtleBg: 'bg-status-off-subtle', text: 'text-status-off-fg' },
+  info: { dot: 'bg-status-info', subtleBg: 'bg-status-info-subtle', text: 'text-status-info-fg' },
 }
 
 export const statusBadgeVariants = cva(

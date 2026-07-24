@@ -40,12 +40,13 @@ const bind = computed<FormFieldControlBinding>(() => ({
 <template>
   <div :class="cn('flex flex-col gap-1.5', props.class)">
     <label v-if="label" :for="fieldId" class="text-sm font-semibold text-fg">
-      {{ label }}<span v-if="required" class="ml-0.5 text-status-error" aria-hidden="true">*</span>
+      {{ label
+      }}<span v-if="required" class="ml-0.5 text-status-error-fg" aria-hidden="true">*</span>
     </label>
 
     <slot :id="fieldId" :bind="bind" />
 
     <p v-if="hint && !error" :id="hintId" class="text-xs text-fg-subtle">{{ hint }}</p>
-    <p v-if="error" :id="errorId" role="alert" class="text-xs text-status-error">{{ error }}</p>
+    <p v-if="error" :id="errorId" role="alert" class="text-xs text-status-error-fg">{{ error }}</p>
   </div>
 </template>

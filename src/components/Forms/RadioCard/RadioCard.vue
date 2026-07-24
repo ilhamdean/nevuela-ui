@@ -53,7 +53,7 @@ const model = defineModel<string>()
           <span class="text-sm font-semibold text-fg">{{ opt.title }}</span>
           <span
             v-if="opt.badge"
-            class="rounded-full bg-brand-subtle px-1.5 py-0.5 text-2xs font-semibold tracking-wide text-brand uppercase"
+            class="rounded-full bg-brand-subtle px-1.5 py-0.5 text-2xs font-semibold tracking-wide text-brand-fg uppercase"
           >
             {{ opt.badge }}
           </span>

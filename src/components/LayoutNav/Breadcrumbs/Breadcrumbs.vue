@@ -62,7 +62,7 @@ const hiddenCount = computed(() => props.items.length - visibleItemCount.value)
           type="button"
           :aria-label="`Show ${hiddenCount} hidden breadcrumb${hiddenCount === 1 ? '' : 's'}`"
           :aria-expanded="expanded"
-          class="inline-flex size-6 items-center justify-center rounded-sm text-fg-subtle transition-colors hover:bg-bg-subtle hover:text-brand focus-visible:ring-2 focus-visible:ring-brand/25 focus-visible:outline-none"
+          class="inline-flex size-6 items-center justify-center rounded-sm text-fg-subtle transition-colors hover:bg-bg-subtle hover:text-brand-fg focus-visible:ring-2 focus-visible:ring-brand/25 focus-visible:outline-none"
           @click="expanded = true"
         >
           <MoreHorizontal class="size-4" aria-hidden="true" />
@@ -72,7 +72,7 @@ const hiddenCount = computed(() => props.items.length - visibleItemCount.value)
           <a
             v-if="entry.item.href && i < entries.length - 1"
             :href="entry.item.href"
-            class="inline-flex items-center gap-1 text-fg-subtle transition-colors hover:text-brand"
+            class="inline-flex items-center gap-1 text-fg-subtle transition-colors hover:text-brand-fg"
           >
             <component
               :is="entry.item.icon"

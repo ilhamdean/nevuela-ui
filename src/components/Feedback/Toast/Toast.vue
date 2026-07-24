@@ -40,10 +40,10 @@ const icons: Record<ToastTone, Component> = {
   error: CircleX,
 }
 const iconColor: Record<ToastTone, string> = {
-  info: 'text-status-info',
-  success: 'text-status-active',
-  warning: 'text-status-warning',
-  error: 'text-status-error',
+  info: 'text-status-info-fg',
+  success: 'text-status-active-fg',
+  warning: 'text-status-warning-fg',
+  error: 'text-status-error-fg',
 }
 const icon = computed(() => icons[props.tone])
 
