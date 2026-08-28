@@ -34,6 +34,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create release PR or publish to npm
+        id: changesets
         uses: changesets/action@v1
         with:
           version: pnpm version-packages
@@ -41,3 +42,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Push tags
+        if: steps.changesets.outputs.published == 'true'
+        run: git push origin --tags
+
+      - name: Create GitHub Release
+        if: steps.changesets.outputs.published == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGES: ${{ steps.changesets.outputs.publishedPackages }}
+        run: |
+          echo "$PACKAGES" | jq -r '.[].version' | while read -r version; do
+            gh release create "v${version}" --title "v${version}" --generate-notes
+          done
