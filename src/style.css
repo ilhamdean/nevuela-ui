@@ -1,0 +1,391 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/*
+ * Nevuela design tokens — "Aurora / Nebula": deep indigo-violet neutrals (a
+ * night sky) with an emerald-green brand accent (the aurora). See
+ * design-reference/tokens.md for the full rationale.
+ *
+ * Architecture:
+ *   :root            -> raw token values (the single source of truth)
+ *   @theme inline    -> maps Tailwind utilities onto those vars (bg-brand,
+ *                       text-status-active, rounded-sm, text-base, shadow-sm …)
+ *                       plus the shadcn/Reka "bridge" vars (--primary, --border,
+ *                       --radius …) so pulled-in primitives inherit the theme.
+ *   .dark            -> dark-theme token overrides, applied via a `.dark` class
+ *                       on an ancestor element (see `.dark` below for the palette
+ *                       and the WCAG rationale behind it)
+ */
+
+@custom-variant dark (&:is(.dark *));
+
+/* ------------------------------------------------------------------ *
+ * Raw tokens (light)
+ * ------------------------------------------------------------------ */
+:root {
+  /* Brand (aurora emerald) */
+  --brand: oklch(0.47 0.15 155);
+  --brand-hover: oklch(0.42 0.14 155);
+  --brand-active: oklch(0.37 0.13 155);
+  --brand-subtle: oklch(0.95 0.045 155);
+  /* Brand color for bare text/icons on `--bg`/`--surface` (as opposed to `--brand`,
+   * tuned for solid fills with `--on-accent` text on top). Identical to `--brand` in
+   * light mode — a single shade already contrasts both ways against white. Diverges
+   * in `.dark`, where no single emerald shade can satisfy both roles at once. */
+  --brand-fg: var(--brand);
+  --link: oklch(0.46 0.13 170);
+
+  /* Neutrals (violet-tinted; fg is a deep indigo, not pure black) */
+  --surface: oklch(1 0 0);
+  --bg: oklch(0.978 0.004 275);
+  --bg-subtle: oklch(0.953 0.006 275);
+  --border-c: oklch(0.895 0.012 275);
+  --border-strong: oklch(0.82 0.02 275);
+  --fg: oklch(0.19 0.045 280);
+  --fg-subtle: oklch(0.19 0.045 280 / 0.6);
+  --fg-muted: oklch(0.65 0.02 270);
+
+  /* Status — solid (text/icon/dot) + subtle (tinted background) */
+  --status-active: oklch(0.5 0.14 142);
+  --status-active-subtle: oklch(0.96 0.035 145);
+  --status-warning: oklch(0.55 0.15 75);
+  --status-warning-subtle: oklch(0.96 0.045 80);
+  --status-error: oklch(0.55 0.21 25);
+  --status-error-subtle: oklch(0.95 0.035 25);
+  --status-off: oklch(0.65 0.02 270);
+  --status-off-subtle: oklch(0.953 0.006 275);
+  --status-info: oklch(0.5 0.19 265);
+  --status-info-subtle: oklch(0.95 0.03 265);
+
+  /* Status color for bare text/icons — see `--brand-fg`. Identical to the solid
+   * status color in light mode; only `--status-error-fg` diverges in `.dark`
+   * (error is the one status color also used as a solid fill with `--on-accent`
+   * text, so it has the same dual-role conflict as brand). */
+  --status-active-fg: var(--status-active);
+  --status-warning-fg: var(--status-warning);
+  --status-error-fg: var(--status-error);
+  --status-off-fg: var(--status-off);
+  --status-info-fg: var(--status-info);
+
+  /* On-solid foreground (text/icon placed on a solid status/brand fill) */
+  --on-accent: oklch(1 0 0);
+
+  /* Chart series (ordered categorical ramp — aurora/nebula gradient) */
+  --chart-1: oklch(0.55 0.15 155); /* aurora emerald */
+  --chart-2: oklch(0.55 0.19 290); /* nebula violet  */
+  --chart-3: oklch(0.62 0.13 200); /* aurora cyan    */
+  --chart-4: oklch(0.6 0.18 340); /* nebula magenta */
+  --chart-5: oklch(0.68 0.14 80); /* star gold      */
+  --chart-6: oklch(0.5 0.18 265); /* deep nebula blue */
+
+  /* ---- shadcn / Reka bridge (re-pointed onto Nevuela tokens) ---- */
+  --radius: var(--radius-sm);
+  --background: var(--bg);
+  --foreground: var(--fg);
+  --card: var(--surface);
+  --card-foreground: var(--fg);
+  --popover: var(--surface);
+  --popover-foreground: var(--fg);
+  --primary: var(--brand);
+  --primary-foreground: var(--on-accent);
+  --secondary: var(--bg-subtle);
+  --secondary-foreground: var(--fg);
+  --muted: var(--bg-subtle);
+  --muted-foreground: var(--fg-subtle);
+  --accent: var(--brand-subtle);
+  --accent-foreground: var(--brand-fg);
+  --destructive: var(--status-error);
+  --border: var(--border-c);
+  --input: var(--border-c);
+  --ring: var(--brand);
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--fg);
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: var(--on-accent);
+  --sidebar-accent: var(--brand-subtle);
+  --sidebar-accent-foreground: var(--brand-fg);
+  --sidebar-border: var(--border-c);
+  --sidebar-ring: var(--brand);
+}
+
+/* ------------------------------------------------------------------ *
+ * Tailwind theme mapping
+ * ------------------------------------------------------------------ */
+@theme inline {
+  /* Semantic Nevuela color utilities (bg-brand, text-fg-muted, …) */
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-active: var(--brand-active);
+  --color-brand-subtle: var(--brand-subtle);
+  --color-brand-fg: var(--brand-fg);
+  --color-link: var(--link);
+
+  --color-surface: var(--surface);
+  --color-bg: var(--bg);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-border-strong: var(--border-strong);
+  --color-fg: var(--fg);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-fg-muted: var(--fg-muted);
+  --color-on-accent: var(--on-accent);
+
+  --color-status-active: var(--status-active);
+  --color-status-active-subtle: var(--status-active-subtle);
+  --color-status-active-fg: var(--status-active-fg);
+  --color-status-warning: var(--status-warning);
+  --color-status-warning-subtle: var(--status-warning-subtle);
+  --color-status-warning-fg: var(--status-warning-fg);
+  --color-status-error: var(--status-error);
+  --color-status-error-subtle: var(--status-error-subtle);
+  --color-status-error-fg: var(--status-error-fg);
+  --color-status-off: var(--status-off);
+  --color-status-off-subtle: var(--status-off-subtle);
+  --color-status-off-fg: var(--status-off-fg);
+  --color-status-info: var(--status-info);
+  --color-status-info-subtle: var(--status-info-subtle);
+  --color-status-info-fg: var(--status-info-fg);
+
+  /* Chart series */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+
+  /* shadcn / Reka bridge color utilities */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* Static scales — literal values. Font/radius/type scale don't vary by theme.
+ * `--shadow-*` do (see `.dark` below), and while `@theme` (without `inline`)
+ * does emit a real, overridable custom property, the *utilities* don't read it:
+ * Tailwind resolves each shadow at build time so it can splice a
+ * `var(--tw-shadow-color, …)` slot into every layer. Overriding `--shadow-*`
+ * therefore can't repaint `shadow-md` — the dark elevation utilities at the
+ * bottom of this file do that. */
+@theme {
+  /* Fonts */
+  --font-sans: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-heading: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  /* Radius scale (crisp but not sharp — 6px is the default) */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+
+  /* Type scale (size / line-height), 1.5 rhythm on text sizes */
+  --text-2xs: 0.6875rem; /* 11px */
+  --text-2xs--line-height: 1rem; /* 16px */
+  --text-xs: 0.75rem; /* 12px */
+  --text-xs--line-height: 1.125rem; /* 18px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-sm--line-height: 1.3125rem; /* 21px */
+  --text-base: 1rem; /* 16px */
+  --text-base--line-height: 1.5rem; /* 24px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-lg--line-height: 1.6875rem; /* 27px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-xl--line-height: 1.75rem; /* 28px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-2xl--line-height: 2rem; /* 32px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-3xl--line-height: 2.25rem; /* 36px */
+
+  /* Elevation (tinted with the indigo foreground) */
+  --shadow-sm: 0 1px 2px oklch(0.19 0.045 280 / 0.16), 0 1px 3px oklch(0.19 0.045 280 / 0.2);
+  --shadow-md: 0 2px 4px oklch(0.19 0.045 280 / 0.12), 0 4px 8px oklch(0.19 0.045 280 / 0.16);
+  --shadow-lg: 0 8px 16px oklch(0.19 0.045 280 / 0.12), 0 12px 24px oklch(0.19 0.045 280 / 0.14);
+}
+
+/* ------------------------------------------------------------------ *
+ * Dark theme.
+ *
+ * Every value below was chosen and verified against WCAG AA (4.5:1 text,
+ * 3:1 UI components/graphics) with an OKLCH contrast calculator, not by
+ * eye — see the design notes in `design-reference/tokens.md`.
+ *
+ * `--brand`/`--status-error` keep the fill role (solid backgrounds with
+ * `--on-accent` text on top: buttons, checkboxes, selected days). A single
+ * emerald or red shade can't also work as bare text/icon color directly on
+ * `--bg`/`--surface` and stay AA-compliant in both roles at once — the
+ * lightness a color needs to read as text on a dark background is too
+ * light for white text to read on top of it as a fill, and vice versa.
+ * `--brand-fg`/`--status-*-fg` are the lighter shades for that bare-text
+ * role (components use `text-brand-fg`/`text-status-*-fg`, never
+ * `text-brand`/`text-status-*`, for actual text/icons). The other three
+ * status colors (active/warning/info) are never used as a fill with
+ * `--on-accent` text, so they don't need a second shade — their `-fg`
+ * token is simply an alias, same as in light mode. `--status-off` mirrors
+ * `--fg-muted` and is intentionally under AA, matching the light theme's
+ * own treatment of "inactive" as a deliberately de-emphasized state.
+ * ------------------------------------------------------------------ */
+.dark {
+  --surface: oklch(0.22 0.026 280);
+  --bg: oklch(0.15 0.028 280);
+  --bg-subtle: oklch(0.19 0.028 280);
+  --border-c: oklch(0.32 0.02 280);
+  --border-strong: oklch(0.44 0.018 280);
+  --fg: oklch(0.97 0.005 275);
+  --fg-subtle: oklch(0.97 0.005 275 / 0.65);
+  --fg-muted: oklch(0.72 0.018 270);
+
+  --brand: oklch(0.5 0.16 155);
+  --brand-hover: oklch(0.46 0.16 155);
+  --brand-active: oklch(0.42 0.16 155);
+  --brand-subtle: oklch(0.27 0.06 155);
+  --brand-fg: oklch(0.67 0.16 155);
+  --link: oklch(0.68 0.12 170);
+
+  --status-active: oklch(0.66 0.15 142);
+  --status-active-subtle: oklch(0.24 0.05 142);
+  --status-warning: oklch(0.7 0.15 75);
+  --status-warning-subtle: oklch(0.26 0.055 75);
+  --status-error: oklch(0.52 0.19 25);
+  --status-error-subtle: oklch(0.27 0.075 25);
+  --status-error-fg: oklch(0.7 0.17 25);
+  --status-off: oklch(0.72 0.018 270);
+  --status-off-subtle: oklch(0.25 0.03 275);
+  --status-info: oklch(0.68 0.15 265);
+  --status-info-subtle: oklch(0.26 0.07 265);
+
+  /* The `-fg` aliases have to be repeated here, not left to inherit from
+   * `:root`. A `var()` inside a custom property is substituted where that
+   * property is *declared*, so `--status-active-fg: var(--status-active)` on
+   * `:root` bakes in the light value once and for all; a nested `.dark`
+   * ancestor overriding `--status-active` can never reach it. Re-declaring the
+   * same alias on `.dark` substitutes it against the dark values instead.
+   * (`--brand-fg`/`--status-error-fg` are above — they diverge, so they carry
+   * literals rather than an alias.) */
+  --status-active-fg: var(--status-active);
+  --status-warning-fg: var(--status-warning);
+  --status-off-fg: var(--status-off);
+  --status-info-fg: var(--status-info);
+
+  /* Chart series — brightened from their light-theme values; the originals
+   * fall as low as ~2.8:1 against a dark surface (non-text/graphical
+   * objects still need 3:1 per WCAG 1.4.11). */
+  --chart-1: oklch(0.62 0.15 155); /* aurora emerald */
+  --chart-2: oklch(0.64 0.17 290); /* nebula violet  */
+  --chart-3: oklch(0.66 0.13 200); /* aurora cyan    */
+  --chart-4: oklch(0.66 0.17 340); /* nebula magenta */
+  --chart-5: oklch(0.7 0.14 80); /* star gold      */
+  --chart-6: oklch(0.64 0.16 265); /* deep nebula blue */
+
+  /* A light-tinted shadow (the light theme's `--shadow-*`) is nearly the
+   * same lightness as a dark surface and reads as almost invisible — dark
+   * elevation needs a nearly-black shadow at higher opacity instead. */
+  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.4), 0 1px 3px oklch(0 0 0 / 0.5);
+  --shadow-md: 0 2px 4px oklch(0 0 0 / 0.35), 0 4px 8px oklch(0 0 0 / 0.45);
+  --shadow-lg: 0 8px 16px oklch(0 0 0 / 0.35), 0 12px 24px oklch(0 0 0 / 0.4);
+
+  /* ---- shadcn / Reka bridge, repeated ----
+   * Same substitution rule as the `-fg` aliases above: every one of these is a
+   * `var()` alias, so the `:root` copy resolves against the light palette and
+   * stays light no matter what a nested `.dark` does. Any alias added to the
+   * `:root` bridge must be added here too. */
+  --background: var(--bg);
+  --foreground: var(--fg);
+  --card: var(--surface);
+  --card-foreground: var(--fg);
+  --popover: var(--surface);
+  --popover-foreground: var(--fg);
+  --primary: var(--brand);
+  --primary-foreground: var(--on-accent);
+  --secondary: var(--bg-subtle);
+  --secondary-foreground: var(--fg);
+  --muted: var(--bg-subtle);
+  --muted-foreground: var(--fg-subtle);
+  --accent: var(--brand-subtle);
+  --accent-foreground: var(--brand-fg);
+  --destructive: var(--status-error);
+  --border: var(--border-c);
+  --input: var(--border-c);
+  --ring: var(--brand);
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--fg);
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: var(--on-accent);
+  --sidebar-accent: var(--brand-subtle);
+  --sidebar-accent-foreground: var(--brand-fg);
+  --sidebar-border: var(--border-c);
+  --sidebar-ring: var(--brand);
+}
+
+/* ------------------------------------------------------------------ *
+ * Base layer
+ * ------------------------------------------------------------------ */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Dark elevation.
+ *
+ * Tailwind bakes the `--shadow-*` values into the `shadow-*` utilities at
+ * build time — each layer becomes `… var(--tw-shadow-color, <literal>)` so the
+ * `shadow-<color>` modifier can swap the color — which means the utilities
+ * never read `var(--shadow-md)` and the `.dark` overrides above can't reach
+ * them. Re-declaring `--tw-shadow` here is what actually repaints elevated
+ * surfaces (menus, popovers, toasts, modals, cards) in dark mode. Keep the
+ * values in sync with the `.dark` `--shadow-*` tokens, which stay the
+ * documented source of truth for anyone reading them with `var()` directly.
+ *
+ * `:where(.dark *)` keeps specificity at 0-1-0, the same as the plain
+ * `.shadow-md`, so these win on source order (they come after Tailwind's
+ * utilities in the same layer) while still losing to an explicit
+ * `dark:shadow-*` variant, which is 0-2-0.
+ * ------------------------------------------------------------------ */
+@layer utilities {
+  .shadow-sm:where(.dark *) {
+    --tw-shadow:
+      0 1px 2px var(--tw-shadow-color, oklch(0 0 0 / 0.4)),
+      0 1px 3px var(--tw-shadow-color, oklch(0 0 0 / 0.5));
+  }
+  .shadow-md:where(.dark *) {
+    --tw-shadow:
+      0 2px 4px var(--tw-shadow-color, oklch(0 0 0 / 0.35)),
+      0 4px 8px var(--tw-shadow-color, oklch(0 0 0 / 0.45));
+  }
+  .shadow-lg:where(.dark *) {
+    --tw-shadow:
+      0 8px 16px var(--tw-shadow-color, oklch(0 0 0 / 0.35)),
+      0 12px 24px var(--tw-shadow-color, oklch(0 0 0 / 0.4));
+  }
+}
